@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useFood } from "@/context/FoodContext";
 import { useToast } from "@/hooks/use-toast";
+import { X, Save, Utensils } from "lucide-react";
 
 interface FoodItem {
   name: string;
@@ -120,7 +121,7 @@ export default function FoodAnalysisResult({
                 <div key={index} className="flex justify-between items-center">
                   <div className="flex items-center">
                     <div className="w-6 h-6 bg-dark-surface rounded-full flex items-center justify-center mr-2">
-                      <i className="fas fa-utensils text-xs"></i>
+                      <Utensils className="h-3 w-3" />
                     </div>
                     <span>{item.name} ({item.amount})</span>
                   </div>
@@ -150,14 +151,14 @@ export default function FoodAnalysisResult({
               className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
               onClick={onClose}
             >
-              <i className="fas fa-times"></i>
+              <X className="h-5 w-5" />
               <span>Cancel</span>
             </button>
             <button 
               className="flex-1 bg-primary hover:bg-secondary transition rounded-lg py-3 flex items-center justify-center gap-2 text-white"
               onClick={handleSave}
             >
-              <i className="fas fa-save"></i>
+              <Save className="h-5 w-5" />
               <span>Save to Diary</span>
             </button>
           </div>

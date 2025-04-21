@@ -145,7 +145,7 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
             className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
             onClick={handleSelectFromGallery}
           >
-            <i className="fas fa-image"></i>
+            <Image className="h-5 w-5" />
             <span>Gallery</span>
           </button>
           
@@ -154,7 +154,7 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
               className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
               onClick={handleScanBarcode}
             >
-              <i className="fas fa-barcode"></i>
+              <Barcode className="h-5 w-5" />
               <span>Barcode</span>
             </button>
           ) : (
@@ -162,7 +162,7 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
               className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
               onClick={() => setLocation("/camera")}
             >
-              <i className="fas fa-camera"></i>
+              <Camera className="h-5 w-5" />
               <span>Photo</span>
             </button>
           )}
