@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GymLogo from "./GymLogo";
 import { useGym } from "@/context/GymContext";
+import { Bell } from "lucide-react";
 
 export default function Header() {
   const { gym } = useGym();
@@ -25,7 +26,7 @@ export default function Header() {
           className="text-text-primary" 
           onClick={toggleNotifications}
         >
-          <i className="fas fa-bell text-lg"></i>
+          <Bell className="w-5 h-5" />
         </button>
       </div>
       

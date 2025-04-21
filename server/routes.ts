@@ -157,35 +157,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.status(201).json(newSettings);
   });
   
-  // O3 API proxy for food recognition
+  // OpenAI API for food recognition
   apiRouter.post('/analyze-food', async (req, res) => {
     try {
-      // This would normally call the O3 API
-      // For now we'll return a mock response to be replaced by actual API implementation
-      const apiKey = process.env.O3_API_KEY || "";
-      if (!apiKey) {
-        return res.status(500).json({ message: 'O3 API key not configured' });
+      const { imageBase64 } = req.body;
+      
+      if (!imageBase64) {
+        return res.status(400).json({ message: 'Image data is required' });
       }
       
-      // With a real API key, we would make the actual API call
-      // const response = await fetch('https://api.o3.service/analyze', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${apiKey}`,
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(req.body)
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error(`O3 API responded with ${response.status}: ${response.statusText}`);
-      // }
-      //
-      // const data = await response.json();
-      // res.json(data);
+      // Check if OpenAI API key is configured
+      if (!process.env.OPENAI_API_KEY) {
+        return res.status(500).json({ message: 'OpenAI API key not configured' });
+      }
       
-      // Since we don't have the actual API key, we'll return an error
-      res.status(500).json({ message: 'Could not process food image. Please ensure O3_API_KEY is configured.' });
+      // Import and use the OpenAI service to analyze the food image
+      const { analyzeFoodImage } = await import('./openai');
+      const result = await analyzeFoodImage(imageBase64);
+      
+      res.json(result);
     } catch (error) {
       console.error('Error analyzing food:', error);
       res.status(500).json({ message: 'Failed to analyze food', error: error instanceof Error ? error.message : String(error) });
