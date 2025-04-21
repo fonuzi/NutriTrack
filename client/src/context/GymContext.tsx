@@ -44,13 +44,13 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setGym(parsedGym);
         
         // Apply the stored primary color
-        applyPrimaryColor(parsedGym.primaryColor);
+        applyPrimaryColor(document.documentElement, parsedGym.primaryColor);
       } catch (e) {
         console.error("Failed to parse gym data from localStorage:", e);
       }
     } else {
       // Apply the default primary color
-      applyPrimaryColor(defaultGym.primaryColor);
+      applyPrimaryColor(document.documentElement, defaultGym.primaryColor);
     }
   }, []);
   
@@ -83,6 +83,9 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       await updateGym(gym.id, { primaryColor });
       setGym({ ...gym, primaryColor });
+      
+      // Apply the updated primary color to the document
+      applyPrimaryColor(document.documentElement, primaryColor);
     } catch (error) {
       console.error("Error updating gym primary color:", error);
       throw error;

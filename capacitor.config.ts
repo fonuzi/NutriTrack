@@ -15,11 +15,8 @@ const config: CapacitorConfig = {
       promptLabelHeader: "Camera Access",
       promptLabelText: "GymTrack needs your permission to use the camera to analyze your food"
     }
-  },
-  server: {
-    hostname: "app.performize.io", 
-    androidScheme: "https"
   }
+  // No server config - this ensures the app uses bundled web content
 };
 
 export default config;
