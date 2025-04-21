@@ -2,7 +2,11 @@ import { useActivity } from "@/context/ActivityContext";
 import { useFood } from "@/context/FoodContext";
 import { cn, formatCalories, formatMacro, calculatePercentage } from "@/lib/utils";
 import { format } from "date-fns";
-import { Flame, Footprints, Drumstick, Droplet } from "lucide-react";
+// Import the icons individually to ensure they're properly bundled
+import { Flame } from "lucide-react";
+import { Footprints } from "lucide-react";
+import { Drumstick } from "lucide-react";
+import { Droplet } from "lucide-react";
 
 export default function DailySummary() {
   const { dailySummary } = useFood();

@@ -4,7 +4,6 @@ const config: CapacitorConfig = {
   appId: 'io.performize.gymtrack',
   appName: 'GymTrack',
   webDir: 'dist/public',
-  bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
@@ -18,7 +17,7 @@ const config: CapacitorConfig = {
     }
   },
   server: {
-    hostname: "app.performize.io",
+    hostname: "app.performize.io", 
     androidScheme: "https"
   }
 };
