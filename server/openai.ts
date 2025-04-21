@@ -54,7 +54,9 @@ export async function analyzeFoodImage(base64Image: string): Promise<FoodAnalysi
       max_tokens: 800,
     });
 
-    const resultJson = JSON.parse(response.choices[0].message.content);
+    // Safely parse the response content, ensuring it's not null
+    const content = response.choices[0].message.content || '{}';
+    const resultJson = JSON.parse(content);
     
     // Ensure we have all the required fields with proper formatting
     const result: FoodAnalysisResult = {
