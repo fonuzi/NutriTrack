@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { useCamera } from "@/hooks/useCamera";
 import { useToast } from "@/hooks/use-toast";
 import { useFileUpload } from "@/hooks/useFileUpload";
-import { fileToBase64 } from "@/lib/utils";
 import { Camera, X, Image } from "lucide-react";
 
 interface CameraCaptureProps {
@@ -40,12 +39,12 @@ export default function CameraCapture({ onPhotoTaken }: CameraCaptureProps) {
       const imageData = await capturePhoto(videoRef.current);
       console.log("Photo captured successfully, data length:", imageData.length);
 
-      // We have the image data, now let's pass it to the callback
       if (onPhotoTaken) {
+        console.log("Calling photo taken callback");
         onPhotoTaken(imageData);
       } else {
-        console.log("No callback provided, processing image without a callback");
-        // Redirect to home page with a success message since we don't have a callback to process the image
+        // If no callback provided, analyze the image directly
+        console.log("No callback provided, navigating back");
         setLocation("/");
         toast({
           title: "Photo Captured",
@@ -76,7 +75,7 @@ export default function CameraCapture({ onPhotoTaken }: CameraCaptureProps) {
         try {
           console.log("Gallery image selected:", file.name);
 
-          // Convert file to data URL format (not just base64)
+          // Convert file to base64
           const reader = new FileReader();
           reader.onload = () => {
             const dataUrl = reader.result as string;
@@ -108,7 +107,7 @@ export default function CameraCapture({ onPhotoTaken }: CameraCaptureProps) {
   };
 
   return (
-    <div className="bg-dark-surface rounded-xl overflow-hidden shadow-lg">
+    <div className="bg-dark-surface rounded-xl overflow-hidden shadow-lg mx-auto max-w-md">
       <div className="relative bg-black aspect-[3/4] flex items-center justify-center">
         {isCameraActive ? (
           <video 
@@ -153,20 +152,18 @@ export default function CameraCapture({ onPhotoTaken }: CameraCaptureProps) {
       </div>
 
       <div className="p-4">
-        <h2 className="text-lg font-semibold mb-2">
-          Take a Photo of Your Food
-        </h2>
+        <h2 className="text-lg font-semibold mb-2">Take a Photo of Your Food</h2>
         <p className="text-sm text-text-secondary">
           Make sure the entire plate is visible for best results
         </p>
 
-        <div className="flex justify-center mt-4">
+        <div className="mt-4">
           <button 
             className="w-full bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
             onClick={handleSelectFromGallery}
           >
             <Image className="h-5 w-5" />
-            <span>Choose from Gallery</span>
+            <span>Select from Gallery</span>
           </button>
         </div>
       </div>

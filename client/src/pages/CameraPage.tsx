@@ -82,7 +82,7 @@ export default function CameraPage() {
   // If the image is being analyzed or an analysis result exists, show the result component
   if (capturedImage && (isAnalyzing || analysisResult)) {
     return (
-      <div className="px-4 py-6 space-y-6">
+      <div className="px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 max-w-screen-lg mx-auto">
         <FoodAnalysisResult
           imageUrl={capturedImage}
           name={analysisResult?.name || "Analyzing..."}
@@ -100,7 +100,7 @@ export default function CameraPage() {
 
   // Otherwise, show the camera capture component
   return (
-    <div className="px-4 py-6 space-y-6">
+    <div className="px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 max-w-screen-lg mx-auto">
       <CameraCapture onPhotoTaken={handlePhotoTaken} />
     </div>
   );
