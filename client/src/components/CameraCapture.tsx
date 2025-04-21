@@ -4,14 +4,13 @@ import { useCamera } from "@/hooks/useCamera";
 import { useToast } from "@/hooks/use-toast";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { fileToBase64 } from "@/lib/utils";
-import { Camera, X, Image, Barcode } from "lucide-react";
+import { Camera, X, Image } from "lucide-react";
 
 interface CameraCaptureProps {
-  mode?: "photo" | "barcode";
   onPhotoTaken?: (imageData: string) => void;
 }
 
-export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCaptureProps) {
+export default function CameraCapture({ onPhotoTaken }: CameraCaptureProps) {
   const { toast } = useToast();
   const { isCameraActive, startCamera, stopCamera, capturePhoto } = useCamera();
   const { uploadFile } = useFileUpload();
@@ -108,10 +107,6 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
     });
   };
 
-  const handleScanBarcode = () => {
-    setLocation("/camera?mode=barcode");
-  };
-
   return (
     <div className="bg-dark-surface rounded-xl overflow-hidden shadow-lg">
       <div className="relative bg-black aspect-[3/4] flex items-center justify-center">
@@ -159,40 +154,20 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
 
       <div className="p-4">
         <h2 className="text-lg font-semibold mb-2">
-          {mode === "photo" ? "Take a Photo of Your Food" : "Scan a Barcode"}
+          Take a Photo of Your Food
         </h2>
         <p className="text-sm text-text-secondary">
-          {mode === "photo" 
-            ? "Make sure the entire plate is visible for best results" 
-            : "Hold the barcode steady in the frame"}
+          Make sure the entire plate is visible for best results
         </p>
 
-        <div className="flex gap-3 mt-4">
+        <div className="flex justify-center mt-4">
           <button 
-            className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
+            className="w-full bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
             onClick={handleSelectFromGallery}
           >
             <Image className="h-5 w-5" />
-            <span>Gallery</span>
+            <span>Choose from Gallery</span>
           </button>
-
-          {mode === "photo" ? (
-            <button 
-              className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
-              onClick={handleScanBarcode}
-            >
-              <Barcode className="h-5 w-5" />
-              <span>Barcode</span>
-            </button>
-          ) : (
-            <button 
-              className="flex-1 bg-dark-card hover:bg-dark-border transition rounded-lg py-3 flex items-center justify-center gap-2 text-text-primary"
-              onClick={() => setLocation("/camera")}
-            >
-              <Camera className="h-5 w-5" />
-              <span>Photo</span>
-            </button>
-          )}
         </div>
       </div>
     </div>
