@@ -16,7 +16,7 @@ export default function Header() {
         <GymLogo />
         <div>
           <h1 className="text-lg font-semibold text-text-primary">{gym.name}</h1>
-          <p className="text-xs text-text-secondary">powered by CalAI</p>
+          <p className="text-xs text-text-secondary">powered by PERFORMIZE</p>
         </div>
       </div>
       

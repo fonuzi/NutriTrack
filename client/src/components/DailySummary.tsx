@@ -2,6 +2,7 @@ import { useActivity } from "@/context/ActivityContext";
 import { useFood } from "@/context/FoodContext";
 import { formatCalories, formatMacro, calculatePercentage } from "@/lib/utils";
 import { format } from "date-fns";
+import { Flame, Footprints, Drumstick, Droplet } from "lucide-react";
 
 export default function DailySummary() {
   const { dailySummary } = useFood();
@@ -21,7 +22,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-primary bg-opacity-20 p-2 rounded-full mr-2">
-                <i className="fas fa-fire text-primary"></i>
+                <Flame className="text-primary w-4 h-4" />
               </div>
               <span className="text-sm text-text-secondary">Calories</span>
             </div>
@@ -44,7 +45,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-accent bg-opacity-20 p-2 rounded-full mr-2">
-                <i className="fas fa-shoe-prints text-accent"></i>
+                <Footprints className="text-accent w-4 h-4" />
               </div>
               <span className="text-sm text-text-secondary">Steps</span>
             </div>
@@ -67,7 +68,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-success bg-opacity-20 p-2 rounded-full mr-2">
-                <i className="fas fa-drumstick-bite text-success"></i>
+                <Drumstick className="text-success w-4 h-4" />
               </div>
               <span className="text-sm text-text-secondary">Protein</span>
             </div>
@@ -90,7 +91,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-[#22D3EE] bg-opacity-20 p-2 rounded-full mr-2">
-                <i className="fas fa-droplet text-[#22D3EE]"></i>
+                <Droplet className="text-[#22D3EE] w-4 h-4" />
               </div>
               <span className="text-sm text-text-secondary">Water</span>
             </div>
