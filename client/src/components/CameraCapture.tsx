@@ -49,8 +49,37 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
       } else {
         // If no callback provided, analyze the image directly
         console.log("No callback provided, analyzing directly");
+        
+        // Extract base64 data without the prefix (e.g., "data:image/jpeg;base64,")
         const base64Image = imageData.split(',')[1];
-        analyzeImage(base64Image);
+        
+        if (!base64Image) {
+          throw new Error("Invalid image data format");
+        }
+        
+        console.log("Base64 image data length:", base64Image.length);
+        
+        // Call the API to analyze the food
+        try {
+          const result = await analyzeImage(base64Image);
+          console.log("Analysis result:", result);
+          
+          // Navigate to results page
+          if (result) {
+            setLocation("/");
+            toast({
+              title: "Food Analyzed",
+              description: `Detected: ${result.name} (${result.calories} kcal)`,
+            });
+          }
+        } catch (apiError) {
+          console.error("Error analyzing image:", apiError);
+          toast({
+            title: "Analysis Failed",
+            description: "Could not analyze your food. Please try again.",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error("Error capturing photo:", error);
@@ -74,11 +103,44 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
       accept: "image/*",
       onFileSelected: async (file) => {
         try {
+          console.log("Gallery image selected:", file.name);
+          
+          // Convert file to base64
           const base64 = await fileToBase64(file);
+          console.log("Converted image to base64, length:", base64 ? base64.length : 0);
+          
           if (onPhotoTaken) {
+            console.log("Calling photo taken callback with gallery image");
             onPhotoTaken(base64);
           } else {
-            analyzeImage(base64);
+            console.log("Analyzing gallery image directly");
+            
+            // Set loading state
+            setIsCapturing(true);
+            
+            try {
+              // Call the API to analyze the food
+              const result = await analyzeImage(base64);
+              console.log("Gallery image analysis result:", result);
+              
+              // Navigate to results page
+              if (result) {
+                setLocation("/");
+                toast({
+                  title: "Food Analyzed",
+                  description: `Detected: ${result.name} (${result.calories} kcal)`,
+                });
+              }
+            } catch (apiError) {
+              console.error("Error analyzing gallery image:", apiError);
+              toast({
+                title: "Analysis Failed",
+                description: "Could not analyze your food. Please try again.",
+                variant: "destructive",
+              });
+            } finally {
+              setIsCapturing(false);
+            }
           }
         } catch (error) {
           console.error("Error processing gallery image:", error);
