@@ -1,6 +1,6 @@
 import { useActivity } from "@/context/ActivityContext";
 import { useFood } from "@/context/FoodContext";
-import { formatCalories, formatMacro, calculatePercentage } from "@/lib/utils";
+import { cn, formatCalories, formatMacro, calculatePercentage } from "@/lib/utils";
 import { format } from "date-fns";
 import { Flame, Footprints, Drumstick, Droplet } from "lucide-react";
 
