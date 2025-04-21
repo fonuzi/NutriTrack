@@ -161,35 +161,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
   apiRouter.post('/analyze-food', async (req, res) => {
     try {
       const { imageBase64 } = req.body;
-      
+
       if (!imageBase64) {
         console.error('Missing image data in analyze-food request');
         return res.status(400).json({ message: 'Image data is required' });
       }
-      
+
       console.log(`Received image data for analysis, length: ${imageBase64.length} characters`);
-      
+
       // Check if OpenAI API key is configured
       if (!process.env.OPENAI_API_KEY) {
         console.error('OpenAI API key not configured for analyze-food endpoint');
+
+        // Return dummy data for testing when API key is not configured
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Returning dummy data for development');
+          return res.json({
+            name: "Test Meal",
+            calories: 550,
+            protein: 35,
+            carbs: 45,
+            fat: 15,
+            items: [
+              { name: "Grilled Salmon", amount: "6 oz", calories: 350 },
+              { name: "Brown Rice", amount: "1/2 cup", calories: 120 },
+              { name: "Steamed Broccoli", amount: "1 cup", calories: 80 }
+            ]
+          });
+        }
+
         return res.status(500).json({ message: 'OpenAI API key not configured' });
       }
-      
+
       console.log('Using OpenAI API to analyze food image...');
-      
+
       // Import and use the OpenAI service to analyze the food image
       const { analyzeFoodImage } = await import('./openai');
       const result = await analyzeFoodImage(imageBase64);
-      
+
       console.log('Analysis completed successfully:', JSON.stringify(result).substring(0, 100) + '...');
       res.json(result);
     } catch (error) {
       console.error('Error analyzing food:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
       const errorType = error instanceof Error ? error.constructor.name : 'Unknown';
-      
+
       console.error(`Food analysis error (${errorType}): ${errorMessage}`);
-      
+
       res.status(500).json({ 
         message: 'Failed to analyze food', 
         error: errorMessage,

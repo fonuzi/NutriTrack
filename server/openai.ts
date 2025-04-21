@@ -20,6 +20,8 @@ export interface FoodAnalysisResult {
 
 export async function analyzeFoodImage(base64Image: string): Promise<FoodAnalysisResult> {
   try {
+    console.log("Analyzing food image with OpenAI. Image data length:", base64Image.length);
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -56,8 +58,10 @@ export async function analyzeFoodImage(base64Image: string): Promise<FoodAnalysi
 
     // Safely parse the response content, ensuring it's not null
     const content = response.choices[0].message.content || '{}';
+    console.log("OpenAI response content:", content);
+
     const resultJson = JSON.parse(content);
-    
+
     // Ensure we have all the required fields with proper formatting
     const result: FoodAnalysisResult = {
       name: resultJson.name || "Unknown Food",
@@ -73,7 +77,8 @@ export async function analyzeFoodImage(base64Image: string): Promise<FoodAnalysi
           }))
         : []
     };
-    
+
+    console.log("Processed analysis result:", result);
     return result;
   } catch (error) {
     console.error("Error analyzing food image with OpenAI:", error);

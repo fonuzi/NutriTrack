@@ -210,21 +210,27 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const analyzeImage = async (imageBase64: string) => {
     try {
       console.log("FoodContext: calling analyzeFood with image data length:", imageBase64 ? imageBase64.length : 0);
-      
+
       // Call the API to analyze the food image
       const result = await analyzeFood({ imageBase64 });
       console.log("Food analysis result from API:", result);
-      
-      toast({
-        title: "Food Analyzed",
-        description: `Detected: ${result.name} (${result.calories} kcal)`,
-      });
-      
-      return result;
+
+      if (result) {
+        toast({
+          title: "Food Analyzed",
+          description: `Detected: ${result.name} (${result.calories} kcal)`,
+        });
+
+        return result;
+      }
+
+      // If no result but no error was thrown, use fallback
+      throw new Error("No result returned from analysis");
+
     } catch (error) {
       console.error("Error analyzing food image:", error);
-      
-      // Create a fallback result for testing
+
+      // Create a fallback result for testing or when in development environment
       const fallbackResult: AnalyzeFoodResponse = {
         name: "Healthy Meal",
         calories: 450,
@@ -237,25 +243,25 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
           { name: "Brown Rice", amount: "1/2 cup", calories: 80 }
         ]
       };
-      
+
       // In development environment, return fallback data
       if (process.env.NODE_ENV === 'development') {
         console.log("Using fallback data for development:", fallbackResult);
-        
+
         toast({
           title: "Using Test Data",
           description: "API call failed, using test data for demonstration",
         });
-        
+
         return fallbackResult;
       }
-      
+
       toast({
         title: "Analysis Failed",
         description: "Could not analyze your food. Please try again.",
         variant: "destructive",
       });
-      
+
       throw error;
     }
   };

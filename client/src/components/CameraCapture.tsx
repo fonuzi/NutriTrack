@@ -11,41 +11,6 @@ interface CameraCaptureProps {
   onPhotoTaken?: (imageData: string) => void;
 }
 
-interface FoodAnalysisResult {
-  name: string;
-  calories: number;
-  protein?: number;
-  carbs?: number;
-  fat?: number;
-  steps?: string[];
-}
-
-// OpenAI API integration for food analysis
-const analyzeFoodImage = async (base64Image: string): Promise<FoodAnalysisResult> => {
-  try {
-    const response = await fetch("/api/analyze-food", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        image: base64Image,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to analyze food image");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error in analyzeFoodImage:", error);
-    throw error;
-  }
-};
-
 export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCaptureProps) {
   const { toast } = useToast();
   const { isCameraActive, startCamera, stopCamera, capturePhoto } = useCamera();
@@ -76,43 +41,17 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
       const imageData = await capturePhoto(videoRef.current);
       console.log("Photo captured successfully, data length:", imageData.length);
 
+      // We have the image data, now let's pass it to the callback
       if (onPhotoTaken) {
-        console.log("Calling photo taken callback");
         onPhotoTaken(imageData);
       } else {
-        // If no callback provided, analyze the image directly
-        console.log("No callback provided, analyzing directly");
-
-        // Extract base64 data without the prefix (e.g., "data:image/jpeg;base64,")
-        const base64Image = imageData.split(',')[1];
-
-        if (!base64Image) {
-          throw new Error("Invalid image data format");
-        }
-
-        console.log("Base64 image data length:", base64Image.length);
-
-        // Call the API to analyze the food
-        try {
-          const result = await analyzeFoodImage(base64Image);
-          console.log("Analysis result:", result);
-
-          // Navigate to results page
-          if (result) {
-            setLocation("/");
-            toast({
-              title: "Food Analyzed",
-              description: `Detected: ${result.name} (${result.calories} kcal)`,
-            });
-          }
-        } catch (apiError) {
-          console.error("Error analyzing image:", apiError);
-          toast({
-            title: "Analysis Failed",
-            description: "Could not analyze your food. Please try again.",
-            variant: "destructive",
-          });
-        }
+        console.log("No callback provided, processing image without a callback");
+        // Redirect to home page with a success message since we don't have a callback to process the image
+        setLocation("/");
+        toast({
+          title: "Photo Captured",
+          description: "Your photo was captured successfully.",
+        });
       }
     } catch (error) {
       console.error("Error capturing photo:", error);
@@ -138,46 +77,25 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
         try {
           console.log("Gallery image selected:", file.name);
 
-          // Convert file to base64
-          const base64 = await fileToBase64(file);
-          console.log("Converted image to base64, length:", base64 ? base64.length : 0);
+          // Convert file to data URL format (not just base64)
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataUrl = reader.result as string;
+            console.log("Converted image to data URL, length:", dataUrl ? dataUrl.length : 0);
 
-          if (onPhotoTaken) {
-            console.log("Calling photo taken callback with gallery image");
-            onPhotoTaken(base64);
-          } else {
-            console.log("Analyzing gallery image directly");
-
-            // Set loading state
-            setIsCapturing(true);
-
-            try {
-              // Get the base64 data without the prefix if it exists
-              const base64Data = base64.includes('base64,') ? base64.split('base64,')[1] : base64;
-
-              // Call the API to analyze the food
-              const result = await analyzeFoodImage(base64Data);
-              console.log("Gallery image analysis result:", result);
-
-              // Navigate to results page
-              if (result) {
-                setLocation("/");
-                toast({
-                  title: "Food Analyzed",
-                  description: `Detected: ${result.name} (${result.calories} kcal)`,
-                });
-              }
-            } catch (apiError) {
-              console.error("Error analyzing gallery image:", apiError);
+            if (onPhotoTaken) {
+              console.log("Calling photo taken callback with gallery image");
+              onPhotoTaken(dataUrl);
+            } else {
+              console.log("No callback for gallery image, redirecting to home");
+              setLocation("/");
               toast({
-                title: "Analysis Failed",
-                description: "Could not analyze your food. Please try again.",
-                variant: "destructive",
+                title: "Image Selected",
+                description: "Your image was selected successfully.",
               });
-            } finally {
-              setIsCapturing(false);
             }
-          }
+          };
+          reader.readAsDataURL(file);
         } catch (error) {
           console.error("Error processing gallery image:", error);
           toast({

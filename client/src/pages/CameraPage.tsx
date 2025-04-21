@@ -15,12 +15,12 @@ export default function CameraPage() {
   const [, params] = useRoute("/camera:rest*");
   const { toast } = useToast();
   const { analyzeImage } = useFood();
-  
+
   const [mode, setMode] = useState<"photo" | "barcode">("photo");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-  
+
   // Parse query parameters to determine camera mode
   useEffect(() => {
     if (params && params["rest*"]) {
@@ -33,33 +33,35 @@ export default function CameraPage() {
       }
     }
   }, [params]);
-  
+
   const handlePhotoTaken = async (imageData: string) => {
     console.log("Photo taken, image data length:", imageData ? imageData.length : 0);
     setCapturedImage(imageData);
     setIsAnalyzing(true);
-    
+
     try {
-      // Call the API through our backend proxy to analyze the food
       // Extract base64 data without the prefix (e.g., "data:image/jpeg;base64,")
-      const base64Image = imageData.split(',')[1]; 
+      let base64Image = imageData;
+      if (imageData.includes('base64,')) {
+        base64Image = imageData.split('base64,')[1];
+      }
       console.log("Extracted base64 data length:", base64Image ? base64Image.length : 0);
-      
+
       if (!base64Image) {
         throw new Error("Invalid image data");
       }
-      
+
       // Add a small delay to ensure UI updates properly
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await new Promise(resolve => setTimeout(resolve, 200));
+
       // Call the API to analyze the image
       const result = await analyzeImage(base64Image);
       console.log("Analysis result:", result);
-      
+
       if (!result) {
         throw new Error("No analysis result returned");
       }
-      
+
       setAnalysisResult({
         name: result.name,
         calories: result.calories,
@@ -68,7 +70,7 @@ export default function CameraPage() {
         fat: result.fat,
         items: result.items,
       });
-      
+
       // Success message
       toast({
         title: "Analysis Complete",
@@ -86,13 +88,13 @@ export default function CameraPage() {
       setIsAnalyzing(false);
     }
   };
-  
+
   const handleClose = () => {
     setCapturedImage(null);
     setAnalysisResult(null);
     setLocation("/");
   };
-  
+
   // If the image is being analyzed or an analysis result exists, show the result component
   if (capturedImage && (isAnalyzing || analysisResult)) {
     return (
@@ -111,7 +113,7 @@ export default function CameraPage() {
       </div>
     );
   }
-  
+
   // Otherwise, show the camera capture component
   return (
     <div className="px-4 py-6 space-y-6">
