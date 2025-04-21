@@ -2,11 +2,11 @@ import { useActivity } from "@/context/ActivityContext";
 import { useFood } from "@/context/FoodContext";
 import { cn, formatCalories, formatMacro, calculatePercentage } from "@/lib/utils";
 import { format } from "date-fns";
-// Import the icons individually to ensure they're properly bundled
-import { Flame } from "lucide-react";
-import { Footprints } from "lucide-react";
-import { Drumstick } from "lucide-react";
-import { Droplet } from "lucide-react";
+// Using react-icons instead for better compatibility
+import { FaFire } from "react-icons/fa";
+import { FaPersonWalking } from "react-icons/fa6";
+import { GiChickenLeg } from "react-icons/gi";
+import { BiSolidDroplet } from "react-icons/bi";
 
 export default function DailySummary() {
   const { dailySummary } = useFood();
@@ -26,7 +26,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <div className="bg-primary bg-opacity-20 p-2 rounded-full mr-2 sm:mr-3">
-                <Flame className="text-primary w-4 h-4 sm:w-5 sm:h-5" />
+                <FaFire className="text-primary w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <span className="text-xs sm:text-sm text-text-secondary">Calories</span>
             </div>
@@ -49,7 +49,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <div className="bg-accent bg-opacity-20 p-2 rounded-full mr-2 sm:mr-3">
-                <Footprints className="text-accent w-4 h-4 sm:w-5 sm:h-5" />
+                <FaPersonWalking className="text-accent w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <span className="text-xs sm:text-sm text-text-secondary">Steps</span>
             </div>
@@ -72,7 +72,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <div className="bg-success bg-opacity-20 p-2 rounded-full mr-2 sm:mr-3">
-                <Drumstick className="text-success w-4 h-4 sm:w-5 sm:h-5" />
+                <GiChickenLeg className="text-success w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <span className="text-xs sm:text-sm text-text-secondary">Protein</span>
             </div>
@@ -95,7 +95,7 @@ export default function DailySummary() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               <div className="bg-[#22D3EE] bg-opacity-20 p-2 rounded-full mr-2 sm:mr-3">
-                <Droplet className="text-[#22D3EE] w-4 h-4 sm:w-5 sm:h-5" />
+                <BiSolidDroplet className="text-[#22D3EE] w-4 h-4 sm:w-5 sm:h-5" />
               </div>
               <span className="text-xs sm:text-sm text-text-secondary">Water</span>
             </div>
