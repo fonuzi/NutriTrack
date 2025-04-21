@@ -38,13 +38,22 @@ export default function CameraPage() {
   }, [params]);
   
   const handlePhotoTaken = async (imageData: string) => {
+    console.log("Photo taken, image data length:", imageData ? imageData.length : 0);
     setCapturedImage(imageData);
     setIsAnalyzing(true);
     
     try {
-      // Call the O3 API through our backend proxy to analyze the food
-      const base64Image = imageData.split(',')[1]; // Extract base64 data without the prefix
+      // Call the API through our backend proxy to analyze the food
+      // Extract base64 data without the prefix (e.g., "data:image/jpeg;base64,")
+      const base64Image = imageData.split(',')[1]; 
+      console.log("Extracted base64 data length:", base64Image ? base64Image.length : 0);
+      
+      if (!base64Image) {
+        throw new Error("Invalid image data");
+      }
+      
       const result = await analyzeImage(base64Image);
+      console.log("Analysis result:", result);
       
       setAnalysisResult({
         name: result.name,

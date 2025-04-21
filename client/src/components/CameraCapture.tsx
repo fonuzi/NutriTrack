@@ -34,12 +34,23 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
   const handleCapturePhoto = async () => {
     try {
       setIsCapturing(true);
+      console.log("Attempting to capture photo from video ref:", videoRef.current ? "Available" : "Not available");
+      
+      if (!videoRef.current || !isCameraActive) {
+        throw new Error("Camera not active or no video reference");
+      }
+      
       const imageData = await capturePhoto(videoRef.current);
+      console.log("Photo captured successfully, data length:", imageData.length);
+      
       if (onPhotoTaken) {
+        console.log("Calling photo taken callback");
         onPhotoTaken(imageData);
       } else {
         // If no callback provided, analyze the image directly
-        analyzeImage(imageData);
+        console.log("No callback provided, analyzing directly");
+        const base64Image = imageData.split(',')[1];
+        analyzeImage(base64Image);
       }
     } catch (error) {
       console.error("Error capturing photo:", error);
