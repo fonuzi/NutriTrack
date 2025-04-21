@@ -49,8 +49,16 @@ export default function CameraPage() {
         throw new Error("Invalid image data");
       }
       
+      // Add a small delay to ensure UI updates properly
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Call the API to analyze the image
       const result = await analyzeImage(base64Image);
       console.log("Analysis result:", result);
+      
+      if (!result) {
+        throw new Error("No analysis result returned");
+      }
       
       setAnalysisResult({
         name: result.name,
@@ -59,6 +67,12 @@ export default function CameraPage() {
         carbs: result.carbs,
         fat: result.fat,
         items: result.items,
+      });
+      
+      // Success message
+      toast({
+        title: "Analysis Complete",
+        description: `Detected: ${result.name} (${result.calories} kcal)`,
       });
     } catch (error) {
       console.error("Error analyzing photo:", error);

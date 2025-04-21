@@ -211,49 +211,51 @@ export const FoodProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log("FoodContext: calling analyzeFood with image data length:", imageBase64 ? imageBase64.length : 0);
       
-      // For a quick test, use mock data to see if the UI flow works
-      // Later we'll fix the API connection issue
-      const mockResult = {
-        name: "Test Food",
-        calories: 350,
-        protein: 15,
-        carbs: 40,
-        fat: 10,
+      // Call the API to analyze the food image
+      const result = await analyzeFood({ imageBase64 });
+      console.log("Food analysis result from API:", result);
+      
+      toast({
+        title: "Food Analyzed",
+        description: `Detected: ${result.name} (${result.calories} kcal)`,
+      });
+      
+      return result;
+    } catch (error) {
+      console.error("Error analyzing food image:", error);
+      
+      // Create a fallback result for testing
+      const fallbackResult: AnalyzeFoodResponse = {
+        name: "Healthy Meal",
+        calories: 450,
+        protein: 25,
+        carbs: 45,
+        fat: 12,
         items: [
-          { name: "Test Item 1", amount: "1 serving", calories: 200 },
-          { name: "Test Item 2", amount: "1/2 cup", calories: 150 }
+          { name: "Grilled Chicken", amount: "1 serving", calories: 250 },
+          { name: "Mixed Vegetables", amount: "1 cup", calories: 120 },
+          { name: "Brown Rice", amount: "1/2 cup", calories: 80 }
         ]
       };
       
-      // Try the real API call
-      try {
-        const result = await analyzeFood({ imageBase64 });
-        console.log("Food analysis result from API:", result);
+      // In development environment, return fallback data
+      if (process.env.NODE_ENV === 'development') {
+        console.log("Using fallback data for development:", fallbackResult);
         
         toast({
-          title: "Food Analyzed",
-          description: `Detected: ${result.name} (${result.calories} kcal)`,
+          title: "Using Test Data",
+          description: "API call failed, using test data for demonstration",
         });
         
-        return result;
-      } catch (apiError) {
-        console.error("API call failed, using mock data for now:", apiError);
-        
-        // Use mock data if the API fails
-        toast({
-          title: "Food Analyzed (Demo Mode)",
-          description: "Using test data while we fix the API connection",
-        });
-        
-        return mockResult;
+        return fallbackResult;
       }
-    } catch (error) {
-      console.error("Error analyzing food image:", error);
+      
       toast({
         title: "Analysis Failed",
         description: "Could not analyze your food. Please try again.",
         variant: "destructive",
       });
+      
       throw error;
     }
   };

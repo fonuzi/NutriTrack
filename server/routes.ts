@@ -163,22 +163,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { imageBase64 } = req.body;
       
       if (!imageBase64) {
+        console.error('Missing image data in analyze-food request');
         return res.status(400).json({ message: 'Image data is required' });
       }
       
+      console.log(`Received image data for analysis, length: ${imageBase64.length} characters`);
+      
       // Check if OpenAI API key is configured
       if (!process.env.OPENAI_API_KEY) {
+        console.error('OpenAI API key not configured for analyze-food endpoint');
         return res.status(500).json({ message: 'OpenAI API key not configured' });
       }
+      
+      console.log('Using OpenAI API to analyze food image...');
       
       // Import and use the OpenAI service to analyze the food image
       const { analyzeFoodImage } = await import('./openai');
       const result = await analyzeFoodImage(imageBase64);
       
+      console.log('Analysis completed successfully:', JSON.stringify(result).substring(0, 100) + '...');
       res.json(result);
     } catch (error) {
       console.error('Error analyzing food:', error);
-      res.status(500).json({ message: 'Failed to analyze food', error: error instanceof Error ? error.message : String(error) });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorType = error instanceof Error ? error.constructor.name : 'Unknown';
+      
+      console.error(`Food analysis error (${errorType}): ${errorMessage}`);
+      
+      res.status(500).json({ 
+        message: 'Failed to analyze food', 
+        error: errorMessage,
+        errorType: errorType
+      });
     }
   });
   
