@@ -37,19 +37,29 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   
   // Load gym data from localStorage on initial render
   useEffect(() => {
-    const storedGym = localStorage.getItem("gym");
-    if (storedGym) {
-      try {
-        const parsedGym = JSON.parse(storedGym);
-        setGym(parsedGym);
-        
-        // Apply the stored primary color
-        applyPrimaryColor(parsedGym.primaryColor);
-      } catch (e) {
-        console.error("Failed to parse gym data from localStorage:", e);
+    try {
+      const storedGym = localStorage.getItem("gym");
+      if (storedGym) {
+        try {
+          const parsedGym = JSON.parse(storedGym);
+          setGym(parsedGym);
+          
+          // Apply the stored primary color
+          applyPrimaryColor(parsedGym.primaryColor);
+        } catch (e) {
+          console.error("Failed to parse gym data from localStorage:", e);
+          // If parsing fails, apply the default gym and color
+          setGym(defaultGym);
+          applyPrimaryColor(defaultGym.primaryColor);
+        }
+      } else {
+        // Apply the default primary color if no stored gym
+        applyPrimaryColor(defaultGym.primaryColor);
       }
-    } else {
-      // Apply the default primary color
+    } catch (e) {
+      console.error("Error in GymContext initialization:", e);
+      // Ensure we at least have the default gym configuration
+      setGym(defaultGym);
       applyPrimaryColor(defaultGym.primaryColor);
     }
   }, []);
@@ -83,6 +93,9 @@ export const GymProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       await updateGym(gym.id, { primaryColor });
       setGym({ ...gym, primaryColor });
+      
+      // Apply the new color to the UI
+      applyPrimaryColor(primaryColor);
     } catch (error) {
       console.error("Error updating gym primary color:", error);
       throw error;

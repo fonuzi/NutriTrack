@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -12,7 +13,6 @@ import CameraPage from "@/pages/CameraPage";
 import ProgressPage from "@/pages/ProgressPage";
 import SettingsPage from "@/pages/SettingsPage";
 import OnboardingPage from "@/pages/OnboardingPage";
-import { useEffect } from "react";
 import { GymProvider } from "@/context/GymContext";
 import { FoodProvider } from "@/context/FoodContext";
 import { ActivityProvider } from "@/context/ActivityContext";
@@ -61,19 +61,56 @@ function Router() {
 }
 
 function App() {
+  // Ensure we start with default CSS variables for the app
+  useEffect(() => {
+    try {
+      // Set default CSS variables if they don't exist
+      const root = document.documentElement;
+      if (!root.style.getPropertyValue('--primary')) {
+        root.style.setProperty('--primary', '#6366F1');
+        root.style.setProperty('--primary-foreground', '#ffffff');
+      }
+    } catch (e) {
+      console.error("Error setting default CSS variables:", e);
+    }
+  }, []);
+
+  // Simple try-catch approach for error handling
+  try {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <GymProvider>
+          <FoodProvider>
+            <ActivityProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Router />
+              </TooltipProvider>
+            </ActivityProvider>
+          </FoodProvider>
+        </GymProvider>
+      </QueryClientProvider>
+    );
+  } catch (error) {
+    console.error("Critical error in App component:", error);
+    return <ErrorFallback error={error instanceof Error ? error : new Error("Unknown error occurred")} />;
+  }
+}
+
+// Simple Error Fallback component instead of full error boundary
+const ErrorFallback = ({ error }: { error: Error | null }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <GymProvider>
-        <FoodProvider>
-          <ActivityProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Router />
-            </TooltipProvider>
-          </ActivityProvider>
-        </FoodProvider>
-      </GymProvider>
-    </QueryClientProvider>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-dark-bg text-white">
+      <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+      <p className="mb-4">The application encountered an error. Please try refreshing the page.</p>
+      {error && <p className="mb-4 text-red-400">{error.message}</p>}
+      <button 
+        onClick={() => window.location.reload()}
+        className="px-4 py-2 bg-primary text-white rounded-md"
+      >
+        Refresh Page
+      </button>
+    </div>
   );
 }
 

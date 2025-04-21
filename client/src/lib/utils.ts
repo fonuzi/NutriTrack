@@ -23,10 +23,10 @@ export function fileToBase64(file: File): Promise<string> {
   });
 }
 
-export function applyPrimaryColor(element: HTMLElement | null, color: string): void {
-  if (!element) return;
-  element.style.setProperty('--primary', color);
-  element.style.setProperty('--primary-foreground', getContrastingColor(color));
+export function applyPrimaryColor(color: string): void {
+  const rootElement = document.documentElement;
+  rootElement.style.setProperty('--primary', color);
+  rootElement.style.setProperty('--primary-foreground', getContrastingColor(color));
 }
 
 function getContrastingColor(hexColor: string): string {
