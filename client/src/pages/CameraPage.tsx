@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useRoute } from "wouter";
+import React, { useState } from "react";
+import { useLocation } from "wouter";
 import CameraCapture from "@/components/CameraCapture";
 import FoodAnalysisResult from "@/components/FoodAnalysisResult";
 import { useFood } from "@/context/FoodContext";
@@ -10,29 +10,13 @@ import { AnalyzeFoodResponse } from "@/lib/api";
 type AnalysisResult = AnalyzeFoodResponse;
 
 export default function CameraPage() {
-  const [location] = useLocation();
   const [, setLocation] = useLocation();
-  const [, params] = useRoute("/camera:rest*");
   const { toast } = useToast();
   const { analyzeImage } = useFood();
 
-  const [mode, setMode] = useState<"photo" | "barcode">("photo");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-
-  // Parse query parameters to determine camera mode
-  useEffect(() => {
-    if (params && params["rest*"]) {
-      const query = new URLSearchParams(params["rest*"]);
-      const modeParam = query.get("mode");
-      if (modeParam === "barcode") {
-        setMode("barcode");
-      } else {
-        setMode("photo");
-      }
-    }
-  }, [params]);
 
   const handlePhotoTaken = async (imageData: string) => {
     console.log("Photo taken, image data length:", imageData ? imageData.length : 0);
@@ -117,7 +101,7 @@ export default function CameraPage() {
   // Otherwise, show the camera capture component
   return (
     <div className="px-4 py-6 space-y-6">
-      <CameraCapture mode={mode} onPhotoTaken={handlePhotoTaken} />
+      <CameraCapture onPhotoTaken={handlePhotoTaken} />
     </div>
   );
 }
