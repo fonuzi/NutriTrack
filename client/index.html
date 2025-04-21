@@ -7,69 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- PWA Support -->
-    <meta name="theme-color" content="#6366F1" />
-    <meta name="description" content="Track your fitness and nutrition with AI-powered food analysis" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="GymTrack" />
-    
-    <!-- iOS PWA Icons and Splash Screens -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-    <link rel="apple-touch-startup-image" href="/icons/splash-screen.png" />
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/icons/icon-192x192.png" />
-    
-    <!-- Web Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
-    
-    <!-- Service Worker Registration -->
-    <script>
-      // Register Service Worker for PWA support
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('ServiceWorker registered with scope:', registration.scope);
-            })
-            .catch(error => {
-              console.error('ServiceWorker registration failed:', error);
-            });
-        });
-      }
-      
-      // Check if running as standalone PWA
-      window.addEventListener('DOMContentLoaded', () => {
-        // Set isPwa flag in localStorage
-        const isPwa = window.matchMedia('(display-mode: standalone)').matches || 
-                     window.navigator.standalone || 
-                     document.referrer.includes('android-app://');
-        
-        localStorage.setItem('isPwa', isPwa ? 'true' : 'false');
-        
-        // Redirect to installation instructions if not in PWA mode on iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const showInstallInstructions = isIOS && !isPwa && !sessionStorage.getItem('installInstructionsShown');
-        
-        if (showInstallInstructions) {
-          sessionStorage.setItem('installInstructionsShown', 'true');
-          // Only show once per session
-          setTimeout(() => {
-            if (confirm('Add GymTrack to your home screen for the best experience. Would you like to see instructions?')) {
-              window.location.href = '/apple-splash.html';
-            }
-          }, 3000);
-        }
-      });
-    </script>
   </body>
 </html>
