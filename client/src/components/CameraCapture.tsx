@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { fileToBase64 } from "@/lib/utils";
 import { useFood } from "@/context/FoodContext";
+import { Camera, X, Image, Barcode } from "lucide-react";
 
 interface CameraCaptureProps {
   mode?: "photo" | "barcode";
@@ -97,7 +98,7 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
           />
         ) : (
           <div className="text-center p-6">
-            <i className="fas fa-camera text-4xl text-text-secondary mb-2"></i>
+            <Camera className="h-10 w-10 text-text-secondary mx-auto mb-2" />
             <p className="text-text-secondary">Camera initializing...</p>
             <p className="text-xs text-text-muted mt-2">Point camera at your food</p>
           </div>
@@ -125,7 +126,7 @@ export default function CameraCapture({ mode = "photo", onPhotoTaken }: CameraCa
           className="absolute top-4 right-4 bg-dark-bg bg-opacity-50 w-10 h-10 rounded-full flex items-center justify-center"
           onClick={handleCloseCamera}
         >
-          <i className="fas fa-times text-white"></i>
+          <X className="h-5 w-5 text-white" />
         </button>
       </div>
       
