@@ -4,15 +4,10 @@ import CameraCapture from "@/components/CameraCapture";
 import FoodAnalysisResult from "@/components/FoodAnalysisResult";
 import { useFood } from "@/context/FoodContext";
 import { useToast } from "@/hooks/use-toast";
+import { AnalyzeFoodResponse } from "@/lib/api";
 
-interface AnalysisResult {
-  name: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  items: Array<{ name: string; amount: string; calories: number }>;
-}
+// Alias for clarity
+type AnalysisResult = AnalyzeFoodResponse;
 
 export default function CameraPage() {
   const [location] = useLocation();
@@ -28,12 +23,14 @@ export default function CameraPage() {
   
   // Parse query parameters to determine camera mode
   useEffect(() => {
-    const query = new URLSearchParams(params?.rest || "");
-    const modeParam = query.get("mode");
-    if (modeParam === "barcode") {
-      setMode("barcode");
-    } else {
-      setMode("photo");
+    if (params && params["rest*"]) {
+      const query = new URLSearchParams(params["rest*"]);
+      const modeParam = query.get("mode");
+      if (modeParam === "barcode") {
+        setMode("barcode");
+      } else {
+        setMode("photo");
+      }
     }
   }, [params]);
   
