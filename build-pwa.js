@@ -48,6 +48,20 @@ const copyPwaAssets = () => {
     path.join(clientPublicDir, 'icons/icon-512x512.png'), 
     path.join(iconsDir, 'icon-512x512.png')
   );
+  fs.copyFileSync(
+    path.join(clientPublicDir, 'icons/apple-touch-icon.png'), 
+    path.join(iconsDir, 'apple-touch-icon.png')
+  );
+  fs.copyFileSync(
+    path.join(clientPublicDir, 'icons/splash-screen.png'), 
+    path.join(iconsDir, 'splash-screen.png')
+  );
+  
+  // Copy iOS assets to root for better compatibility
+  fs.copyFileSync(
+    path.join(clientPublicDir, 'icons/apple-touch-icon.png'), 
+    path.join(distPublicDir, 'apple-touch-icon.png')
+  );
   
   // Copy the splash screen
   fs.copyFileSync(
