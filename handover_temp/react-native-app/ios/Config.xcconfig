@@ -1,0 +1,14 @@
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+// App Bundle Identifier
+PRODUCT_BUNDLE_IDENTIFIER = com.performize.app
+
+// App Version
+MARKETING_VERSION = 1.0.0
+
+// Build Number
+CURRENT_PROJECT_VERSION = 1
+
+// Development Team ID (Replace with your Team ID from Apple Developer Account)
+DEVELOPMENT_TEAM = XXXXXXXXXX
