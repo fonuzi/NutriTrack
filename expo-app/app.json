@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PERFORMIZE",
-    "slug": "performize",
+    "name": "CalTrackAI",
+    "slug": "caltrackAI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.performize.app",
+      "bundleIdentifier": "com.caltrackai.app",
       "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "We need access to your camera to take photos of your food for analysis.",
